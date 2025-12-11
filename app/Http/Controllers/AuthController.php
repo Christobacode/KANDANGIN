@@ -49,19 +49,23 @@ class AuthController extends Controller
     // Proses Register
     public function register(Request $request)
     {
-        $validated = $request->validate([
-            'nama' => 'required|max:100',
-            'username' => 'required|unique:user|max:100',
-            'password' => 'required|min:6',
-            'role' => 'required|in:admin,customer', // Berdasarkan role yang ada
-        ]);
+    // 1. Validasi Input (Hanya nama, email, password)
+    $validated = $request->validate([
+        'nama' => 'required|max:100',
+        'email' => 'required|email|unique:users',
+        'password' => 'required|min:6',
+        // JANGAN validasi 'role' di sini, agar user tidak bisa memanipulasi
+    ]);
 
-        // Hash password sebelum simpan
-        $validated['password'] = Hash::make($validated['password']);
+    // 2. Simpan User Baru
+    \App\Models\User::create([
+        'nama' => $request->nama,
+        'email' => $request->email,
+        'password' => Hash::make($request->password), // Enkripsi password
+        'role' => 'user', // <--- INI KUNCINYA! Paksa jadi 'user' biasa
+    ]);
 
-        User::create($validated);
-
-        return redirect()->route('login')->with('success', 'Registrasi berhasil, silakan login.');
+    return redirect()->route('login')->with('success', 'Registrasi berhasil! Silakan login.');
     }
 
     // Logout
