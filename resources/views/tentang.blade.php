@@ -9,7 +9,10 @@
         <div class="row justify-content-center">
             <div class="col-lg-8 text-center">
                 <h2 class="tentang-title">Tentang</h2>
-                <p class="tentang-description mt-3">KANDANGIN adalah platform digital yang dirancang untuk membantu para peternak...</p>
+                <p class="tentang-description mt-3">
+                    KANDANGIN adalah platform digital yang dirancang untuk membantu para peternak mengelola
+                    kandangnya dengan lebih mudah, efisien, dan modern.
+                </p>
             </div>
         </div>
 
@@ -17,25 +20,43 @@
             <div class="col-lg-6 mb-5 mb-lg-0">
                 <img src="{{ asset('assets/tentang1.jpeg') }}" alt="Tentang Kandangin" class="img-fluid rounded-4 shadow">
             </div>
+
             <div class="col-lg-6">
                 <ul class="list-unstyled">
                     <li class="d-flex align-items-start mb-4">
                         <div class="feature-icon-wrapper me-3"><i class="bi bi-telephone-fill"></i></div>
-                        <div><h5 class="feature-title">Customer Support</h5><p class="feature-description">Tim kami siap membantu...</p></div>
+                        <div>
+                            <h5 class="feature-title">Customer Support</h5>
+                            <p class="feature-description">Tim kami siap membantu kapan pun Anda membutuhkan panduan.</p>
+                        </div>
                     </li>
-                    </ul>
+                    <li class="d-flex align-items-start mb-4">
+                        <div class="feature-icon-wrapper me-3"><i class="bi bi-eye-fill"></i></div>
+                        <div>
+                            <h5 class="feature-title">Harga Terbaik</h5>
+                            <p class="feature-description">KANDANGIN menyediakan peralatan berkualitas tinggi dengan harga kompetitif.</p>
+                        </div>
+                    </li>
+                    <li class="d-flex align-items-start">
+                        <div class="feature-icon-wrapper me-3"><i class="bi bi-geo-alt-fill"></i></div>
+                        <div>
+                            <h5 class="feature-title">Layanan terbaik</h5>
+                            <p class="feature-description">Kami tidak hanya menjual produk, tetapi juga menghadirkan layanan konsultasi.</p>
+                        </div>
+                    </li>
+                </ul>
             </div>
         </div>
 
         <div class="row mt-5 pt-4">
             <div class="col-lg-6 mb-4">
                 <div class="ads-card">
-                    <img src="{{ asset('assets/tentang2.jpeg') }}" alt="Iklan 1" class="ads-image">
+                    <img src="{{ asset('assets/images/tentang2.jpeg') }}" alt="Iklan 1" class="ads-image">
                 </div>
             </div>
             <div class="col-lg-6 mb-4">
                 <div class="ads-card">
-                    <img src="{{ asset('assets/tentang3.jpeg') }}" alt="Iklan 2" class="ads-image">
+                    <img src="{{ asset('assets/images/tentang3.jpeg') }}" alt="Iklan 2" class="ads-image">
                 </div>
             </div>
         </div>

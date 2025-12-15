@@ -2,78 +2,78 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    // Menampilkan Form Login
-    public function showLoginForm()
-    {
+    // Tampilkan Login
+    public function showLoginForm() {
         return view('auth.login');
     }
 
     // Proses Login
-    public function login(Request $request)
-    {
+    public function login(Request $request) {
+        // Defensive: Validasi Input
         $credentials = $request->validate([
-            'username' => 'required',
+            'username' => 'required', // Bisa login pakai username
             'password' => 'required',
         ]);
 
-        // Karena kita menggunakan custom table & primary key, 
-        // pastikan model User sudah benar setup-nya.
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            
-            // Redirect berdasarkan role (contoh sederhana)
+
+            // LOGIKA PEMISAH ADMIN & USER
             if (Auth::user()->role === 'admin') {
-                return redirect()->intended('dashboard');
+                return redirect()->route('produk.index')->with('success', 'Selamat Datang Admin!');
             }
-            return redirect()->intended('home');
+
+            return redirect()->route('home')->with('success', 'Login Berhasil!');
         }
 
         return back()->withErrors([
             'username' => 'Username atau password salah.',
-        ]);
+        ])->onlyInput('username');
     }
 
-    // Menampilkan Form Register
-    public function showRegisterForm()
-    {
+    // Tampilkan Register
+    public function showRegisterForm() {
         return view('auth.register');
     }
 
     // Proses Register
     public function register(Request $request)
     {
-    // 1. Validasi Input (Hanya nama, email, password)
-    $validated = $request->validate([
-        'nama' => 'required|max:100',
-        'email' => 'required|email|unique:users',
-        'password' => 'required|min:6',
-        // JANGAN validasi 'role' di sini, agar user tidak bisa memanipulasi
-    ]);
+        // 1. Validasi Input
+        $request->validate([
+            'nama_depan'    => 'required|string|max:50',
+            'nama_belakang' => 'required|string|max:50',
+            'username'      => 'required|string|max:50|unique:user', // Pastikan tabelnya 'user'
+            'password'      => 'required|min:8',
+        ]);
 
-    // 2. Simpan User Baru
-    \App\Models\User::create([
-        'nama' => $request->nama,
-        'email' => $request->email,
-        'password' => Hash::make($request->password), // Enkripsi password
-        'role' => 'user', // <--- INI KUNCINYA! Paksa jadi 'user' biasa
-    ]);
+        // 2. LOGIKA PENYIMPANAN YANG HILANG (Tambahkan Ini!)
+        // Gabungkan nama depan & belakang
+        $fullName = $request->nama_depan . ' ' . $request->nama_belakang;
 
-    return redirect()->route('login')->with('success', 'Registrasi berhasil! Silakan login.');
+        User::create([
+            'nama'     => $fullName,
+            'username' => $request->username,
+            // Buat email dummy karena di tabel butuh email tapi form gak ada
+            'email'    => $request->username . '@example.com', 
+            'password' => Hash::make($request->password), // Enkripsi password
+            'role'     => 'user', // Set otomatis jadi user biasa
+        ]);
+
+        return redirect()->route('login')->with('success', 'Registrasi berhasil! Silakan login.');
     }
 
-    // Logout
-    public function logout(Request $request)
-    {
+    public function logout(Request $request) {
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return redirect('/login');
+        return redirect()->route('login');
     }
 }

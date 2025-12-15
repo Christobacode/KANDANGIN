@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Masuk - Kandangin</title>
+    <title>Registrasi - Kandangin</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
@@ -24,44 +24,61 @@
 
         <div class="col-lg-6 col-md-12 auth-form-panel">
             <div class="form-wrapper">
-                <h1 class="form-title">Masuk</h1>
+                <h1 class="form-title">Registrasi</h1>
                 
-                @if(session('success'))
-                    <div class="alert alert-success">{{ session('success') }}</div>
-                @endif
                 @if($errors->any())
-                    <div class="alert alert-danger">{{ $errors->first() }}</div>
+                    <div class="alert alert-danger">
+                        <ul class="mb-0">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
                 @endif
 
-                <form action="{{ route('login.post') }}" method="POST">
-                    @csrf <div class="mb-3">
-                        <label for="username" class="form-label">Username</label>
-                        <input type="text" name="username" class="form-control" id="username" placeholder="Masukkan username Anda" required>
+                <form action="{{ route('register.post') }}" method="POST">
+                    @csrf
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Nama Depan</label>
+                            <input type="text" name="nama_depan" class="form-control" placeholder="Nama Depan" required value="{{ old('nama_depan') }}">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Nama Belakang</label>
+                            <input type="text" name="nama_belakang" class="form-control" placeholder="Nama Belakang" required value="{{ old('nama_belakang') }}">
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Username</label>
+                        <input type="text" name="username" class="form-control" placeholder="Username" required value="{{ old('username') }}">
                     </div>
                     <div class="mb-4">
-                        <label for="password" class="form-label">Kata Sandi</label>
+                        <label class="form-label">Kata Sandi</label>
                         <div class="input-group">
-                            <input type="password" name="password" class="form-control" id="password" placeholder="Masukkan kata sandi Anda" required>
+                            <input type="password" name="password" class="form-control" id="password" placeholder="Min. 8 karakter" required>
                             <span class="input-group-text bg-white border-start-0" style="cursor: pointer;" id="togglePassword">
                                 <i class="bi bi-eye" id="eyeIcon"></i>
                             </span>
                         </div>
+                        <small class="form-text text-muted">Minimal 8 karakter.</small>
                     </div>
-                    
+
                     <div class="d-grid">
-                        <button type="submit" class="btn btn-auth-primary">MASUK</button>
+                        <button type="submit" class="btn btn-auth-primary">REGISTRASI</button>
                     </div>
                 </form>
 
                 <div class="text-center mt-4">
-                    <p class="register-prompt">Belum punya akun? <a href="{{ route('register') }}" class="register-link">REGISTRASI</a></p>
+                    <p class="register-prompt">Sudah punya akun? <a href="{{ route('login') }}" class="register-link">MASUK</a></p>
                 </div>
             </div>
         </div>
     </div>
-
+    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        // ... script toggle password sama seperti login ...
         const togglePassword = document.querySelector('#togglePassword');
         const password = document.querySelector('#password');
         const eyeIcon = document.querySelector('#eyeIcon');
