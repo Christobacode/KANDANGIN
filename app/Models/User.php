@@ -3,11 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
+// use Illuminate\Notifications\Notifiable;
+// use Illuminate\Database\Eloquent\Model;
+
 
 class User extends Authenticatable
 {
-    use Notifiable;
+    // use Notifiable;
 
     // Menentukan nama tabel karena di SQL namanya 'user' (singular)
     protected $table = 'user';
@@ -19,7 +21,9 @@ class User extends Authenticatable
     public $timestamps = false;
 
     protected $fillable = [
+        'userID',
         'nama',
+        'email',
         'password',
         'role',
         'username',
@@ -29,15 +33,15 @@ class User extends Authenticatable
         'password',
     ];
 
-    // Relasi: User memiliki banyak Order
-    public function orders()
-    {
-        return $this->hasMany(Order::class, 'userID', 'userID');
-    }
+    // // Relasi: User memiliki banyak Order
+    // public function orders()
+    // {
+    //     return $this->hasMany(Order::class, 'userID', 'userID');
+    // }
 
-    // Relasi: User memiliki banyak Pembayaran
-    public function pembayaran()
-    {
-        return $this->hasMany(Pembayaran::class, 'userID', 'userID');
-    }
+    // // Relasi: User memiliki banyak Pembayaran
+    // public function pembayaran()
+    // {
+    //     return $this->hasMany(Pembayaran::class, 'userID', 'userID');
+    // }
 }

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class DetailOrder extends Model
 {
     protected $table = 'detail_order';
+    // protected $primaryKey = 'kategoriID';
     public $timestamps = false;
     public $incrementing = false; // Karena Primary Key komposit, auto increment dimatikan
 
@@ -17,5 +18,11 @@ class DetailOrder extends Model
         'orderID',
         'produkID',
         'qty',
+    ];
+
+    protected $casts = [
+        'orderID' => 'integer', //ubah casting
+        'produkID' => 'integer', //ubah casting
+        'qty' => 'integer', //ubah casting
     ];
 }

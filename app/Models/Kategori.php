@@ -12,11 +12,16 @@ class Kategori extends Model
 
     protected $fillable = [
         'namakategori',
+        'kategoriID',
     ];
 
-    // Relasi: Kategori memiliki banyak Produk
-    public function produk()
-    {
-        return $this->hasMany(Produk::class, 'kategoriID', 'kategoriID');
-    }
+    protected $casts = [
+        'kategoriID' => 'integer', //ubah casting
+    ];
+
+    // // Relasi: Kategori memiliki banyak Produk
+    // public function produk()
+    // {
+    //     return $this->hasMany(Produk::class, 'kategoriID', 'kategoriID');
+    // }
 }

@@ -8,15 +8,18 @@ use App\Http\Controllers\UserController; // Controller baru untuk Profil
 // --- JALUR TAMU (Belum Login) ---
 Route::middleware(['guest'])->group(function () {
     Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
-    Route::post('/login', [AuthController::class, 'login'])->name('login.post');
+    // Route::post('/login', [AuthController::class, 'login'])->name('login.post');
     Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
     Route::post('/register', [AuthController::class, 'register'])->name('register.post');
 });
 
 // --- JALUR UMUM (Bisa Diakses Siapa Saja) ---
+Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+
 Route::get('/', function () { return view('home'); })->name('home');
 Route::get('/layanan', function () { return view('layanan'); })->name('layanan');
 Route::get('/tentang', function () { return view('tentang'); })->name('tentang');
+
 Route::get('/produk', [ProdukController::class, 'index'])->name('produk.index');
 
 // --- JALUR USER LOGIN (Auth) ---
