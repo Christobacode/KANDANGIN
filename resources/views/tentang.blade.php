@@ -60,18 +60,17 @@
                 </ul>
             </div>
         </div>
-
         <div class="row mt-5 pt-4">
             <div class="col-lg-6 mb-4">
                 <div class="ads-card">
                     {{-- Menggunakan asset() ke folder assets langsung --}}
-                    <img src="{{ asset('assets/tentang2.jpeg') }}" alt="Iklan 1" class="ads-image">
+                    <img src="{{ asset('assets/tentang2.jpeg') }}" alt="tentang 1" class="ads-image">
                 </div>
             </div>
             <div class="col-lg-6 mb-4">
                 <div class="ads-card">
                     {{-- Menggunakan asset() ke folder assets langsung --}}
-                    <img src="{{ asset('assets/tentang3.jpeg') }}" alt="Iklan 2" class="ads-image">
+                    <img src="{{ asset('assets/tentang3.jpeg') }}" alt="tentang 2" class="ads-image">
                 </div>
             </div>
         </div>
