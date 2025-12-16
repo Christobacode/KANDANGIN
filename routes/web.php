@@ -39,3 +39,38 @@ Route::delete('/profil/hapus', [UserController::class, 'destroy'])->name('profil
 // --- ORDER ---
 Route::post('/checkout', [OrderController::class, 'store'])->name('order.store');
 Route::get('/riwayat-order', [OrderController::class, 'history'])->name('order.history');
+
+// Grup Route yang butuh Login
+Route::middleware(['auth'])->group(function () {
+    // Halaman Profil Utama
+    Route::get('/profil', [UserController::class, 'index'])->name('profil');
+    
+    // Halaman Ganti Username
+    Route::get('/profil/ubah-username', [UserController::class, 'editUsername'])->name('profil.username');
+    
+    // Halaman Ganti Password (Sesuaikan jika Anda punya controller khusus)
+    Route::get('/profil/ganti-sandi', [UserController::class, 'editPassword'])->name('profil.password');
+    
+    // Proses Hapus Akun
+    Route::delete('/profil/hapus', [UserController::class, 'destroy'])->name('profil.destroy');
+});
+
+Route::middleware(['auth'])->group(function () {
+    
+    // Halaman Profil Utama
+    Route::get('/profil', [UserController::class, 'index'])->name('profil');
+    Route::delete('/profil/hapus', [UserController::class, 'destroy'])->name('profil.destroy');
+
+    // --- ROUTE UBAH USERNAME ---
+    // Menampilkan halaman (sesuai controller baru)
+    Route::get('/profil/ubah-username', [UserController::class, 'editUsername'])->name('profil.username');
+    // Memproses data update
+    Route::put('/profil/ubah-username', [UserController::class, 'updateUsername'])->name('profil.username.update');
+
+    // --- ROUTE UBAH PASSWORD ---
+    // Menampilkan halaman (sesuai controller baru)
+    Route::get('/profil/ubah-password', [UserController::class, 'editPassword'])->name('profil.password');
+    // Memproses data update
+    Route::put('/profil/ubah-password', [UserController::class, 'updatePassword'])->name('profil.password.update');
+
+});

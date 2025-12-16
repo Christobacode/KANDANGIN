@@ -6,24 +6,25 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    public function up()
+    public function up(): void
     {
         Schema::create('produk', function (Blueprint $table) {
             $table->id('produkID');
             $table->string('namaproduk', 100);
-            $table->decimal('hargaproduk', 10, 2);
+            $table->integer('hargaproduk');
             $table->integer('stokproduk');
+            // Tambahkan kolom gambar (nullable artinya boleh kosong)
+            $table->string('gambar')->nullable(); 
             
-            // Foreign Key ke tabel kategori
-            // nullable() karena di SQL aslinya DEFAULT NULL
-            $table->foreignId('kategoriID')
-                  ->nullable()
-                  ->constrained('kategori', 'kategoriID')
-                  ->nullOnDelete();
+            // Foreign Key Kategori
+            $table->unsignedBigInteger('kategoriID');
+            $table->foreign('kategoriID')->references('kategoriID')->on('kategori')->onDelete('cascade');
+            
+            $table->timestamps();
         });
     }
 
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists('produk');
     }

@@ -12,17 +12,17 @@
                 </div>
                 <div class="card-body p-4">
                     
-                    <form action="{{ route('produk.store') }}" method="POST">
+                    {{-- PENTING: Tambahkan enctype="multipart/form-data" agar bisa upload file --}}
+                    <form action="{{ route('produk.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         
+                        {{-- NAMA PRODUK --}}
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Nama Produk</label>
                             <input type="text" name="namaproduk" class="form-control" placeholder="Contoh: Sensor Panas" required>
-                            <div class="form-text text-muted">
-                                *Tips: Gunakan kata kunci (Panas, Dingin, Angin, Lampu, Siram, Pupuk) agar gambar muncul otomatis.
-                            </div>
                         </div>
 
+                        {{-- KATEGORI --}}
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Kategori</label>
                             <select name="kategoriID" class="form-select" required>
@@ -31,11 +31,16 @@
                                     <option value="{{ $kat->kategoriID }}">{{ $kat->namakategori }}</option>
                                 @endforeach
                             </select>
-                            @if($kategori->isEmpty())
-                                <small class="text-danger">Kategori kosong! Tambahkan data di database tabel 'kategori' dulu.</small>
-                            @endif
                         </div>
 
+                        {{-- UPLOAD GAMBAR (BARU) --}}
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Gambar Produk</label>
+                            <input type="file" name="gambar" class="form-control" accept="image/*">
+                            <div class="form-text text-muted">Format: JPG, PNG, JPEG. Maksimal 2MB.</div>
+                        </div>
+
+                        {{-- HARGA & STOK --}}
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label fw-semibold">Harga (Rp)</label>

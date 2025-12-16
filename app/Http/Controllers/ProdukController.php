@@ -5,78 +5,85 @@ namespace App\Http\Controllers;
 use App\Models\Produk;
 use App\Models\Kategori;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth; // Tambahkan ini
 
-// PENTING: Class ini sekarang mewarisi fitur dari 'Controller' induk
 class ProdukController extends Controller
 {
-    // 1. TAMPILKAN SEMUA PRODUK
+    // 1. TAMPILKAN PRODUK (LOGIKA PEMISAH)
     public function index()
     {
-        // Mengambil data produk beserta kategorinya (biar hemat query)
+        // Ambil data produk & kategori
         $produk = Produk::with('kategori')->get();
-        
-        // Kirim data ke view index
-        return view('produk.index', compact('produk'));
+        $kategori = Kategori::all();
+
+        // Cek Role User
+        if (Auth::check() && Auth::user()->role === 'admin') {
+            // Jika Admin -> Tampilkan View Khusus Admin
+            return view('produk.index_admin', compact('produk', 'kategori'));
+        }
+
+        // Jika User Biasa / Tamu -> Tampilkan View Biasa
+        return view('produk.index', compact('produk', 'kategori'));
     }
 
-    // 2. FORM TAMBAH PRODUK
+    // ... (Function create, store, edit, update, destroy biarkan TETAP SAMA seperti sebelumnya) ...
+    
     public function create()
     {
-        // Ambil data kategori untuk isi dropdown
         $kategori = Kategori::all();
-        
         return view('produk.create', compact('kategori'));
     }
 
-    // 3. SIMPAN DATA PRODUK BARU
     public function store(Request $request)
     {
-        // Validasi input
+        // 1. Validasi Input
         $validated = $request->validate([
             'namaproduk'  => 'required|max:100',
-            'hargaproduk' => 'required|numeric', // numeric biar bisa angka besar
+            'hargaproduk' => 'required|numeric', 
             'stokproduk'  => 'required|integer',
             'kategoriID'  => 'required|exists:kategori,kategoriID',
+            'gambar'      => 'nullable|image|mimes:jpeg,png,jpg|max:2048', // Validasi Gambar
         ]);
 
-        // Simpan ke database
+        // 2. Cek apakah ada file gambar yang diupload
+        if ($request->hasFile('gambar')) {
+            // Simpan gambar ke folder 'public/storage/produk-images'
+            // Hasilnya path seperti: "produk-images/namafileacak.jpg"
+            $path = $request->file('gambar')->store('produk-images', 'public');
+            $validated['gambar'] = $path;
+        }
+
+        // 3. Simpan ke Database
         Produk::create($validated);
 
         return redirect()->route('produk.index')->with('success', 'Produk berhasil ditambahkan!');
     }
 
-    // 4. FORM EDIT PRODUK
     public function edit($id)
     {
         $produk = Produk::findOrFail($id);
         $kategori = Kategori::all();
-        
         return view('produk.edit', compact('produk', 'kategori'));
     }
 
-    // 5. UPDATE DATA PRODUK
     public function update(Request $request, $id)
     {
         $produk = Produk::findOrFail($id);
-
         $validated = $request->validate([
             'namaproduk'  => 'required|max:100',
             'hargaproduk' => 'required|numeric',
             'stokproduk'  => 'required|integer',
             'kategoriID'  => 'required|exists:kategori,kategoriID',
         ]);
-
         $produk->update($validated);
-
         return redirect()->route('produk.index')->with('success', 'Produk berhasil diperbarui!');
     }
 
-    // 6. HAPUS PRODUK
     public function destroy($id)
     {
         $produk = Produk::findOrFail($id);
         $produk->delete();
-
         return redirect()->route('produk.index')->with('success', 'Produk berhasil dihapus!');
     }
 }
+
