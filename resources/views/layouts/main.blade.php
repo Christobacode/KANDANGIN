@@ -102,8 +102,8 @@
                         “Dari peternak, untuk peternak menuju sistem kandang cerdas Indonesia.”
                     </p>
                     <div class="mt-1">
-                        <a href="#" class="social-icon-footer"><i class="fa-brands fa-facebook-f"></i></a>
-                        <a href="#" class="social-icon-footer"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="https://www.facebook.com/share/1DmCnhY7Yv/" class="social-icon-footer"><i class="fa-brands fa-facebook-f"></i></a>
+                        <a href="https://www.instagram.com/daffalih_/?utm_source=ig_web_button_share_sheet" class="social-icon-footer"><i class="fa-brands fa-instagram"></i></a>
                     </div>
                 </div>
             </div>

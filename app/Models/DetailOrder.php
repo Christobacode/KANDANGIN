@@ -25,4 +25,12 @@ class DetailOrder extends Model
         'produkID' => 'integer', //ubah casting
         'qty' => 'integer', //ubah casting
     ];
+
+    // Fungsi ini biar kamu bisa memanggil: $detail->produk->namaproduk
+    public function produk()
+    {
+        // Parameter: (Model Tujuan, Foreign Key di tabel ini, Primary Key di tabel tujuan)
+        return $this->belongsTo(Produk::class, 'produkID', 'produkID');
+    }
+    
 }

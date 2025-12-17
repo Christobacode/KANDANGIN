@@ -95,6 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // logika halaman keranjang //
+    // --- LOGIKA HALAMAN KERANJANG (UPDATE) ---
     if (document.body.classList.contains('page-keranjang')) {
         const cartItemsContainer = document.getElementById('cart-items-container');
         const cartTotalPriceEl = document.getElementById('cart-total-price');
@@ -132,6 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
             cartTotalPriceEl.innerText = `Rp ${totalPrice.toLocaleString('id-ID')}`;
         };
 
+        // Event Listener untuk tombol tambah/kurang quantity
         cartItemsContainer.addEventListener('click', (e) => {
             const target = e.target.closest('.btn-quantity-action');
             if (!target) return;
@@ -152,6 +154,68 @@ document.addEventListener('DOMContentLoaded', () => {
                 updateCartIcon();
             }
         });
+
+        // --- FITUR CHECKOUT KE BACKEND (BARU) ---
+        // Cari tombol beli yang mengarah ke halaman pembayaran
+        const checkoutBtn = document.querySelector('.btn-checkout[href="tunggupembayaran.html"]');
+        
+        if (checkoutBtn) {
+            checkoutBtn.addEventListener('click', async (e) => {
+                e.preventDefault(); // Mencegah pindah halaman langsung
+
+                if (cart.length === 0) {
+                    alert("Keranjang kosong!");
+                    return;
+                }
+
+                // 1. Siapkan data sesuai permintaan OrderController Laravel
+                const payload = {
+                    items: cart.map(item => ({
+                        // Mengambil angka saja dari ID (misal "p1" jadi 1)
+                        produkID: item.id.replace(/\D/g, ''), 
+                        qty: item.quantity
+                    }))
+                };
+
+                // 2. Ambil CSRF Token (Wajib untuk keamanan Laravel)
+                const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+                
+                if (!csrfToken) {
+                    alert("CSRF Token tidak ditemukan. Pastikan Anda sudah login dan menggunakan file .blade.php");
+                    // Untuk testing HTML biasa tanpa server, biarkan lolos:
+                    // window.location.href = 'tunggupembayaran.html';
+                    return;
+                }
+
+                try {
+                    // 3. Kirim data ke Controller
+                    const response = await fetch('/checkout', { 
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': csrfToken,
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (response.ok) {
+                        // Jika sukses masuk database, pindah ke halaman tunggu pembayaran
+                        window.location.href = 'tunggupembayaran.html';
+                        
+                        // Opsional: Jangan hapus cart dulu agar bisa ditampilkan di halaman 'tunggupembayaran.html'
+                        // localStorage.removeItem('cart'); 
+                    } else {
+                        const result = await response.json();
+                        alert('Gagal Checkout: ' + (result.message || 'Terjadi kesalahan sistem.'));
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Gagal menghubungi server.');
+                }
+            });
+        }
+        
         renderCart();
     }
 

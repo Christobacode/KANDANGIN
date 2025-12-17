@@ -11,6 +11,8 @@ class Produk extends Model
 
     protected $table = 'produk';
     protected $primaryKey = 'produkID';
+    public $timestamps = false;
+    protected $guarded = [];
 
     // Tambahkan 'gambar' di sini
     protected $fillable = [
@@ -26,5 +28,4 @@ class Produk extends Model
         return $this->belongsTo(Kategori::class, 'kategoriID', 'kategoriID');
     }
 
-    public $timestamps = false;
 }
