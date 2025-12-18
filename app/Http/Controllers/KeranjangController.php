@@ -22,9 +22,9 @@ class KeranjangController extends Controller
         // Ambil data keranjang user beserta info produknya
         $carts = Keranjang::with('produk')->where('userID', $userID)->get();
 
-        // Hitung total bayar (Harga x Jumlah)
+        // PERBAIKAN: Gunakan ?-> untuk mencegah crash jika produk null saat menghitung total
         $totalBayar = $carts->sum(function($item) {
-            return $item->produk->hargaproduk * $item->qty;
+            return ($item->produk?->hargaproduk ?? 0) * $item->qty;
         });
 
         return view('keranjang', compact('carts', 'totalBayar'));
@@ -65,16 +65,15 @@ class KeranjangController extends Controller
         $cart = Keranjang::where('keranjangID', $keranjangID)->first();
         
         // Kalau user tekan tombol TAMBAH (+)
+        $cart = Keranjang::where('keranjangID', $keranjangID)->firstOrFail();
+        
         if($request->type == 'plus') {
             $cart->increment('qty');
         } 
-        // Kalau user tekan tombol KURANG (-)
         elseif($request->type == 'minus') {
-            // Cek sisa jumlah, kalau > 1 kurangi biasa
             if($cart->qty > 1) {
                 $cart->decrement('qty');
             } else {
-                // Kalau sisa 1 dikurangi, berarti dihapus dari keranjang
                 $cart->delete();
             }
         }

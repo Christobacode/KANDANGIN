@@ -8,39 +8,73 @@ use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
-    // 1. RIWAYAT PESANAN
+    /**
+     * 1. TAMPILKAN RIWAYAT PESANAN
+     * Membedakan tampilan antara Admin (Laporan) dan User (Riwayat Pribadi)
+     */
     public function history()
     {
-        $userID = Auth::id();
-        // Ambil order beserta detail produknya
-        $orders = Order::with('detail.produk')
-                    ->where('userID', $userID)
-                    ->orderBy('orderID', 'desc')
-                    ->get();
+        $user = Auth::user();
+
+        // Standard Programming: Eager Loading untuk mencegah N+1 Query
+        // Menambahkan filter 'has produk' agar detail yang produknya sudah dihapus tidak muncul
+        $query = Order::with(['user', 'detail' => function($q) {
+            $q->has('produk'); 
+        }, 'detail.produk']);
+
+        if ($user->role === 'admin') {
+            // Admin: Melihat pesanan semua user kecuali miliknya sendiri
+            $orders = $query->where('userID', '!=', $user->userID)
+                            ->orderBy('orderID', 'desc')
+                            ->get();
+
+            return view('order.admin_history', compact('orders'));
+        }
+
+        // User Biasa: Hanya melihat pesanan milik sendiri
+        $orders = $query->where('userID', $user->userID)
+                        ->orderBy('orderID', 'desc')
+                        ->get();
 
         return view('order.history', compact('orders'));
     }
 
-    // 2. HALAMAN PEMBAYARAN (QRIS)
+    /**
+     * 2. HALAMAN PEMBAYARAN (QRIS)
+     * Mengambil detail pesanan spesifik untuk proses bayar
+     */
     public function showPayment($orderID)
     {
-        $order = Order::with('detail.produk')
-                    ->where('userID', Auth::id())
+        // Pastikan order yang dibuka adalah milik user yang login atau admin
+        $order = Order::with(['detail.produk'])
                     ->where('orderID', $orderID)
-                    ->firstOrFail();
+                    ->where('userID', Auth::id())
+                    ->firstOrFail(); // Memberikan error 404 jika tidak ditemukan
 
-        if($order->status == 'paid') {
+        // Jika sudah lunas, langsung arahkan ke halaman selesai
+        if ($order->status === 'paid') {
             return view('selesaipembayaran');
         }
 
         return view('tunggupembayaran', compact('order'));
     }
 
-    // 3. KONFIRMASI PEMBAYARAN
+    /**
+     * 3. KONFIRMASI PEMBAYARAN
+     * Mengubah status pesanan menjadi Lunas (Paid)
+     */
     public function confirmPayment($orderID)
     {
-        $order = Order::where('userID', Auth::id())->where('orderID', $orderID)->firstOrFail();
-        $order->update(['status' => 'paid']);
+        // Cari order berdasarkan ID dan kepemilikan user
+        $order = Order::where('orderID', $orderID)
+                    ->where('userID', Auth::id())
+                    ->firstOrFail();
+        
+        // Update status menggunakan properti objek dan save() agar lebih eksplisit
+        $order->status = 'paid';
+        $order->save(); 
+
+        // Sesuai alur: Kembali ke halaman sukses pembayaran
         return view('selesaipembayaran');
     }
 }

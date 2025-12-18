@@ -22,10 +22,13 @@
                 <div class="col-md-8">
                     <ul class="list-unstyled mb-0">
                         @foreach($order->detail as $item)
-                        <li class="mb-2">
-                            <i class="bi bi-box-seam me-2 text-primary"></i>
-                            <strong>{{ $item->qty }}x</strong> {{ $item->produk->namaproduk }}
-                        </li>
+                            {{-- Hanya tampilkan jika produknya masih ada --}}
+                            @if($item->produk)
+                            <li class="mb-2">
+                                <i class="bi bi-box-seam me-2 text-primary"></i>
+                                <strong>{{ $item->qty }}x</strong> {{ $item->produk->namaproduk }}
+                            </li>
+                            @endif
                         @endforeach
                     </ul>
                 </div>
