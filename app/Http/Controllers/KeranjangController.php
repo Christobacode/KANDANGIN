@@ -45,7 +45,7 @@ class KeranjangController extends Controller
         if ($produk->stokproduk < 1) {
             return redirect()->back()->with('error', 'Maaf, stok produk ini sudah habis!');
         }
-        
+
         // Cek apakah barang sudah ada di keranjang
         $cekItem = \App\Models\Keranjang::where('userID', $userID)
                             ->where('produkID', $produkID)
@@ -80,8 +80,9 @@ class KeranjangController extends Controller
 
         if($request->type == 'plus') {
             // Cek apakah stok masih ada sebelum menambah
-            if ($produk->stokproduk < 1) {
-                return redirect()->back()->with('error', 'Stok tidak mencukupi!');
+            // Validasi Stok: Cek apakah masih bisa ditambah
+            if (!$produk || $produk->stokproduk < 1) {
+                return redirect()->back()->with('error', 'Gagal menambah jumlah! Stok sudah habis.');
             }
             
             $cart->increment('qty');
