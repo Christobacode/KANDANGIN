@@ -28,6 +28,7 @@ class AuthController extends Controller
 
             // LOGIKA PEMISAH ADMIN & USER
             if (Auth::user()->role === 'admin') {
+                $request->session()->put('admin_id', Auth::user()->userID);
                 return redirect()->route('produk.index')->with('success', 'Selamat Datang Admin!');
             }
 

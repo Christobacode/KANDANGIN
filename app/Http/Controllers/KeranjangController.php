@@ -37,22 +37,34 @@ class KeranjangController extends Controller
     {
         $userID = Auth::id();
 
-        // Cek dulu: Barang ini udah ada di keranjang belum?
-        $cekItem = Keranjang::where('userID', $userID)
+        // 1. Ambil data produk berdasarkan $produkID agar variabel $produk terdefinisi
+        // Gunakan findOrFail agar otomatis error 404 jika ID produk tidak ditemukan
+        $produk = Produk::findOrFail($produkID); 
+
+        // 2. Sekarang variabel $produk sudah bisa digunakan untuk cek stok
+        if ($produk->stokproduk < 1) {
+            return redirect()->back()->with('error', 'Stok habis!');
+        }
+
+        // Cek apakah barang sudah ada di keranjang
+        $cekItem = \App\Models\Keranjang::where('userID', $userID)
                             ->where('produkID', $produkID)
                             ->first();
 
         if ($cekItem) {
-            // Kalau sudah ada, kita tambahkan jumlahnya aja (+1)
+            // Jika sudah ada, tambah jumlahnya (+1)
             $cekItem->increment('qty');
         } else {
-            // Kalau belum ada, kita bikin baris baru
-            Keranjang::create([
+            // Jika belum ada, buat data baru
+            \App\Models\Keranjang::create([
                 'userID'   => $userID,
                 'produkID' => $produkID,
                 'qty'      => 1
             ]);
         }
+
+        // 3. Kurangi stok produk
+        $produk->decrement('stokproduk');
 
         return redirect()->route('keranjang.index')->with('success', 'Berhasil masuk keranjang!');
     }
@@ -62,13 +74,18 @@ class KeranjangController extends Controller
     // ==========================================================
     public function updateQty(Request $request, $keranjangID)
     {
-        $cart = Keranjang::where('keranjangID', $keranjangID)->first();
-        
-        // Kalau user tekan tombol TAMBAH (+)
-        $cart = Keranjang::where('keranjangID', $keranjangID)->firstOrFail();
-        
+        // Cari data keranjang beserta info produknya
+        $cart = \App\Models\Keranjang::with('produk')->where('keranjangID', $keranjangID)->firstOrFail();
+        $produk = $cart->produk; // Ambil data produk terkait
+
         if($request->type == 'plus') {
+            // Cek apakah stok masih ada sebelum menambah
+            if ($produk->stokproduk < 1) {
+                return redirect()->back()->with('error', 'Stok tidak mencukupi!');
+            }
+            
             $cart->increment('qty');
+            $produk->decrement('stokproduk'); // Kurangi stok karena barang di keranjang bertambah
         } 
         elseif($request->type == 'minus') {
             if($cart->qty > 1) {
@@ -76,6 +93,9 @@ class KeranjangController extends Controller
             } else {
                 $cart->delete();
             }
+            
+            // TAMBAHKAN INI: Kembalikan stok produk karena jumlah di keranjang berkurang/dihapus
+            $produk->increment('stokproduk');
         }
         
         return redirect()->back();

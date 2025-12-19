@@ -6,6 +6,8 @@ use App\Models\Produk;
 use App\Models\Kategori;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth; // Tambahkan ini
+use Illuminate\Support\Facades\Session;
+
 
 class ProdukController extends Controller
 {
@@ -30,12 +32,19 @@ class ProdukController extends Controller
     
     public function create()
     {
+        if (!Session::has('admin_id')) {
+            return redirect('/login')->with('error', 'Anda harus login dulu!');
+        }
         $kategori = Kategori::all();
         return view('produk.create', compact('kategori'));
     }
 
     public function store(Request $request)
     {
+        if (!Session::has('admin_id')) {
+            return redirect('/login')->with('error', 'Anda harus login dulu!');
+        }
+
         // 1. Validasi Input
         $validated = $request->validate([
             'namaproduk'  => 'required|max:100',
@@ -61,6 +70,10 @@ class ProdukController extends Controller
 
     public function edit($id)
     {
+        if (!Session::has('admin_id')) {
+            return redirect('/login')->with('error', 'Anda harus login dulu!');
+        }
+
         $produk = Produk::findOrFail($id);
         $kategori = Kategori::all();
         return view('produk.edit', compact('produk', 'kategori'));
@@ -68,6 +81,10 @@ class ProdukController extends Controller
 
     public function update(Request $request, $id)
     {
+        if (!Session::has('admin_id')) {
+            return redirect('/login')->with('error', 'Anda harus login dulu!');
+        }
+
         $produk = Produk::findOrFail($id);
         $validated = $request->validate([
             'namaproduk'  => 'required|max:100',
@@ -81,6 +98,10 @@ class ProdukController extends Controller
 
     public function destroy($id)
     {
+        if (!Session::has('admin_id')) {
+            return redirect('/login')->with('error', 'Anda harus login dulu!');
+        }
+
         $produk = Produk::findOrFail($id);
         $produk->delete();
         return redirect()->route('produk.index')->with('success', 'Produk berhasil dihapus!');
