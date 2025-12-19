@@ -43,9 +43,9 @@ class KeranjangController extends Controller
 
         // 2. Sekarang variabel $produk sudah bisa digunakan untuk cek stok
         if ($produk->stokproduk < 1) {
-            return redirect()->back()->with('error', 'Stok habis!');
+            return redirect()->back()->with('error', 'Maaf, stok produk ini sudah habis!');
         }
-
+        
         // Cek apakah barang sudah ada di keranjang
         $cekItem = \App\Models\Keranjang::where('userID', $userID)
                             ->where('produkID', $produkID)
