@@ -4,6 +4,7 @@
 @section('body-class', 'page-layanan')
 
 @section('content')
+{{-- Layanan - Kandangin --}}
 <section id="layanan" class="layanan-section py-5">
     <div class="container">
         <div class="row justify-content-center">

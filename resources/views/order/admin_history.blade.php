@@ -1,7 +1,7 @@
 @extends('layouts.main')
 
 @section('title', 'Laporan Order')
-
+{{-- laporan order --}}
 @section('content')
 <div class="container py-5">
     <div class="d-flex justify-content-between align-items-center mb-4 d-print-none">

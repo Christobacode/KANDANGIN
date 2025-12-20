@@ -4,6 +4,7 @@
 @section('body-class', 'page-ubah-username')
 
 @section('content')
+{{-- Ubah username --}}
 <main class="change-username-page py-5">
     <div class="container">
         <div class="row align-items-center justify-content-center gx-lg-5">
@@ -27,17 +28,17 @@
                 <form action="{{ route('profil.username.update') }}" method="POST" id="form-ubah-username">
                     @csrf
                     @method('PUT')
-
+                    {{-- Username lama --}}
                     <div class="mb-3">
                         <label class="form-label">Username Lama</label>
                         <input type="text" class="form-control bg-light" value="{{ Auth::user()->username }}" readonly>
                     </div>
-
+                    {{-- username baru --}}
                     <div class="mb-4">
                         <label class="form-label">Username Baru</label>
                         <input type="text" name="username" class="form-control" placeholder="Masukkan username baru" required>
                     </div>
-
+                    {{-- modal ubah username --}}
                     <div class="d-flex gap-3">
                         <button type="button" class="btn btn-primary px-4" data-bs-toggle="modal" data-bs-target="#ubahUsernameModal">
                             Simpan

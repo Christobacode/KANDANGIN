@@ -3,13 +3,14 @@
 @section('title', 'Keranjang Belanja')
 
 @section('content')
+{{-- section Keranjang Belanja --}}
 <main class="product-section py-5">
     <div class="container">
         <div class="mb-5">
             <h2 class="product-section-title m-0">Keranjang Belanja</h2>
             <hr class="mt-4">
         </div>
-
+        {{-- jika Keranjang Belanja kosong --}}
         @if($carts->isEmpty())
             <div class="text-center py-5">
                 <img src="{{ asset('assets/keranjang.png') }}" style="width: 100px; opacity: 0.5;">

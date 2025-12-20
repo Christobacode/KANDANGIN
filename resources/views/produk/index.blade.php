@@ -4,11 +4,13 @@
 @section('body-class', 'page-produk')
 
 @section('content')
+{{-- Produk --}}
 <section id="produk" class="product-section py-5">
     <div class="container">
         <div class="row align-items-center mb-5 position-relative">
             <div class="col-2"></div>
             <div class="col-8 text-center">
+                {{-- judul section --}}
                 <h2 class="product-section-title">Produk KANDANGIN</h2>
                 <p class="product-section-subtitle mt-2 text-muted">
                     Dapatkan berbagai peralatan peternakan dengan kualitas terbaik<br>dan harga terjangkau.
@@ -33,7 +35,7 @@
                 </li>
             @endforeach
         </ul>
-
+        {{-- tab content --}}
         <div class="tab-content">
             <div class="tab-pane fade show active" id="all">
                 <div class="row">
@@ -72,6 +74,7 @@
                 </div>
             </div>
 
+            {{-- kategori --}}
             @foreach($kategori as $kat)
                 <div class="tab-pane fade" id="kat-{{ $kat->kategoriID }}">
                     <div class="row">
@@ -94,6 +97,7 @@
                                             <h5 class="fw-bold text-primary mb-0">Rp {{ number_format($item->hargaproduk, 0, ',', '.') }}</h5>
                                             <form action="{{ route('keranjang.add', $item->produkID) }}" method="POST">
                                                 @csrf
+                                                {{-- tombol submit --}}
                                                 <button type="submit" class="btn btn-sm px-4 fw-bold text-white" 
                                                     style="background-color: #2ecc71; border-radius: 8px;"
                                                     {{ $item->stokproduk <= 0 ? 'disabled' : '' }}>

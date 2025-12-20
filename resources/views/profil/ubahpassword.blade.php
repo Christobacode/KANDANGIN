@@ -4,6 +4,7 @@
 @section('body-class', 'page-ganti-sandi')
 
 @section('content')
+{{-- ganti kata sandi --}}
 <main class="change-password-page py-5">
     <div class="container">
         <div class="row align-items-center justify-content-center gx-lg-5">
@@ -35,22 +36,22 @@
                 <form action="{{ route('profil.password.update') }}" method="POST" id="form-ganti-sandi">
                     @csrf
                     @method('PUT')
-
+                    {{-- Kata Sandi Lama --}}
                     <div class="mb-3">
                         <label class="form-label">Kata Sandi Lama</label>
                         <input type="password" name="current_password" class="form-control" required>
                     </div>
-
+                    {{-- Kata Sandi Baru --}}
                     <div class="mb-3">
                         <label class="form-label">Kata Sandi Baru</label>
                         <input type="password" name="new_password" class="form-control" required>
                     </div>
-
+                    {{-- Konfirmasi Kata Sandi Baru --}}
                     <div class="mb-4">
                         <label class="form-label">Konfirmasi Kata Sandi Baru</label>
                         <input type="password" name="new_password_confirmation" class="form-control" required>
                     </div>
-
+                    {{-- modal ganti Kata Sandi --}}
                     <div class="d-flex gap-3">
                         <button type="button" class="btn btn-primary px-4" data-bs-toggle="modal" data-bs-target="#gantiSandiModal">
                             Simpan

@@ -20,6 +20,7 @@
                         <img src="{{ asset('assets/qris.png') }}" alt="QRIS" class="img-fluid" style="max-width: 200px;">
                     </div>
                     <div class="mt-4">
+                        {{-- gambar QRIS --}}
                         <img src="{{ asset('assets/qr-pembayaran.png') }}" class="img-fluid mb-2" style="width: 150px;">
                         <p class="mb-0 fw-bold text-danger fs-4">Rp {{ number_format($order->totalharga, 0, ',', '.') }}</p>
                     </div>

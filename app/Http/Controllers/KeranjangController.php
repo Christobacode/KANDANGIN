@@ -18,7 +18,7 @@ class KeranjangController extends Controller
     {
         $userID = Auth::id();
         
-        // maengmbil data keranjang user beserta info produknya
+        // mengmbil data keranjang user beserta info produknya
         $carts = Keranjang::with('produk')->where('userID', $userID)->get();
 
        

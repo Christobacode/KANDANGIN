@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 </head>
 <body>
-
+    {{-- section masuk --}}
     <a href="{{ route('home') }}" class="btn-back-custom">
         <i class="bi bi-chevron-left"></i>
         <span class="back-text-wrapper"><span class="back-text">BACK</span></span>
@@ -34,11 +34,13 @@
                 @endif
 
                 <form action="{{ route('login.post') }}" method="POST">
+                    {{-- username --}}
                     @csrf <div class="mb-3">
                         <label for="username" class="form-label">Username</label>
                         <input type="text" name="username" class="form-control" id="username" placeholder="Masukkan username Anda" required>
                     </div>
                     <div class="mb-4">
+                        {{-- kata sandi --}}
                         <label for="password" class="form-label">Kata Sandi</label>
                         <div class="input-group">
                             <input type="password" name="password" class="form-control" id="password" placeholder="Masukkan kata sandi Anda" required>
@@ -49,10 +51,11 @@
                     </div>
                     
                     <div class="d-grid">
+                        {{-- masuk --}}
                         <button type="submit" class="btn btn-auth-primary">MASUK</button>
                     </div>
                 </form>
-
+                {{-- belum punya akun --}}
                 <div class="text-center mt-4">
                     <p class="register-prompt">Belum punya akun? <a href="{{ route('register') }}" class="register-link">REGISTRASI</a></p>
                 </div>

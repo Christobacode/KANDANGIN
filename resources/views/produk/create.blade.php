@@ -3,6 +3,7 @@
 @section('title', 'Tambah Produk Baru')
 
 @section('content')
+{{-- tambah produk baru --}}
 <div class="container py-5" style="margin-top: 2rem;">
     <div class="row justify-content-center">
         <div class="col-md-8">
@@ -16,13 +17,13 @@
                     <form action="{{ route('produk.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         
-                        {{-- NAMA PRODUK --}}
+                        {{-- nama produk --}}
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Nama Produk</label>
                             <input type="text" name="namaproduk" class="form-control" placeholder="Contoh: Sensor Panas" required>
                         </div>
 
-                        {{-- KATEGORI --}}
+                        {{-- kategori --}}
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Kategori</label>
                             <select name="kategoriID" class="form-select" required>
@@ -33,14 +34,14 @@
                             </select>
                         </div>
 
-                        {{-- UPLOAD GAMBAR (BARU) --}}
+                        {{-- untuk upload gambar --}}
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Gambar Produk</label>
                             <input type="file" name="gambar" class="form-control" accept="image/*">
                             <div class="form-text text-muted">Format: JPG, PNG, JPEG. Maksimal 2MB.</div>
                         </div>
 
-                        {{-- HARGA & STOK --}}
+                        {{-- harga dan stok --}}
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label fw-semibold">Harga (Rp)</label>
@@ -51,7 +52,7 @@
                                 <input type="number" name="stokproduk" class="form-control" placeholder="10" required>
                             </div>
                         </div>
-
+                        {{-- tombol batal dan simpan produk --}}
                         <div class="d-flex justify-content-between mt-4">
                             <a href="{{ route('produk.index') }}" class="btn btn-secondary px-4">Batal</a>
                             <button type="submit" class="btn btn-primary px-4">Simpan Produk</button>

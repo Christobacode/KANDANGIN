@@ -23,6 +23,7 @@
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                     <span class="navbar-toggler-icon"></span>
                 </button>
+                {{-- navbar --}}
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ms-auto align-items-center">
                         <li class="nav-item"><a class="nav-link {{ Request::routeIs('home') ? 'active' : '' }}" href="{{ route('home') }}">Home</a></li>
@@ -92,7 +93,7 @@
     </header>
 
     @yield('content')
-
+    {{-- footer --}}
     <footer class="footer-section">
         <div class="container">
             <div class="row">

@@ -3,6 +3,7 @@
 @section('title', 'Pembayaran Berhasil')
 
 @section('content')
+{{-- section Pembayaran Berhasil --}}
 <main class="payment-success-page py-5 d-flex align-items-center" style="min-height: 60vh;">
     <div class="container text-center">
         <div class="mb-4">

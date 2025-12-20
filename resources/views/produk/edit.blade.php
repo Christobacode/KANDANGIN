@@ -3,6 +3,7 @@
 @section('title', 'Edit Produk')
 
 @section('content')
+{{-- Edit Produk --}}
 <div class="container py-5">
     <div class="row justify-content-center">
         <div class="col-md-8">
@@ -10,16 +11,17 @@
                 <div class="card-header bg-white">
                     <h5 class="mb-0">Edit Produk</h5>
                 </div>
+                {{-- card body --}}
                 <div class="card-body">
                     <form action="{{ route('produk.update', $produk->produkID) }}" method="POST" id="formEditProduk">
                         @csrf
                         @method('PUT')
-                        
+                        {{-- nama produk --}}
                         <div class="mb-3">
                             <label>Nama Produk</label>
                             <input type="text" name="namaproduk" class="form-control" value="{{ $produk->namaproduk }}" required>
                         </div>
-                        
+                        {{-- kategori --}}
                         <div class="mb-3">
                             <label>Kategori</label>
                             <select name="kategoriID" class="form-select" required>
@@ -30,7 +32,7 @@
                                 @endforeach
                             </select>
                         </div>
-                        
+                        {{-- harga produk --}}
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label>Harga</label>
@@ -38,6 +40,7 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label>Stok</label>
+                                {{-- stok produk --}}
                                 <input type="number" name="stokproduk" class="form-control" value="{{ $produk->stokproduk }}" required>
                             </div>
                         </div>

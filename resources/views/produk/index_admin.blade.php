@@ -4,10 +4,12 @@
 @section('body-class', 'page-produk-admin')
 
 @section('content')
+{{-- admin produk --}}
 <section id="produk-admin" class="product-section py-5">
     <div class="container">
         <div class="row align-items-center mb-5">
             <div class="col-8">
+                {{-- judul section produk --}}
                 <h2 class="product-section-title">Kelola Produk (Admin)</h2>
                 <p class="text-muted">Anda dalam mode Administrator. Bisa tambah, edit, dan hapus produk.</p>
             </div>
@@ -30,7 +32,7 @@
                 </li>
             @endforeach
         </ul>
-
+        {{-- tab content --}}
         <div class="tab-content">
             <div class="tab-pane fade show active" id="all">
                 <div class="row">
@@ -43,7 +45,7 @@
                                         <span class="badge bg-secondary">Stok: {{ $item->stokproduk }}</span>
                                     </div>
 
-                                    {{-- GAMBAR PRODUK (Hanya dari Upload) --}}
+                                    {{-- gambar produk --}}
                                     <img src="{{ $item->gambar ? asset('storage/' . $item->gambar) : asset('assets/Logo_kandangin.jpg') }}" 
                                          class="product-card-img mb-3" 
                                          style="object-fit: contain; height: 150px; background-color: #f8f9fa;">
@@ -75,6 +77,7 @@
             </div>
 
             @foreach($kategori as $kat)
+            {{-- kategori --}}
                 <div class="tab-pane fade" id="kat-{{ $kat->kategoriID }}">
                     <div class="row">
                         @forelse($produk->where('kategoriID', $kat->kategoriID) as $item)
@@ -86,7 +89,7 @@
                                             <span class="badge bg-secondary">Stok: {{ $item->stokproduk }}</span>
                                         </div>
 
-                                        {{-- GAMBAR PRODUK (Hanya dari Upload) --}}
+                                        {{-- gambar produk dari upload --}}
                                         <img src="{{ $item->gambar ? asset('storage/' . $item->gambar) : asset('assets/Logo_kandangin.jpg') }}" 
                                              class="product-card-img mb-3" 
                                              style="object-fit: contain; height: 150px; background-color: #f8f9fa;">

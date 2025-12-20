@@ -13,7 +13,7 @@
          padding: 8rem 0; 
          position: relative;
       ">
-      
+    {{-- Home --}}
     <div class="container">
         <div class="row align-items-center">
             <div class="col-lg-6">

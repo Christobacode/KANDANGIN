@@ -4,6 +4,7 @@
 @section('body-class', 'page-profil')
 
 @section('content')
+{{-- Profil Saya --}}
     <main class="account-page py-5">
         <div class="container">
             <div class="row align-items-center justify-content-center gx-lg-5">
@@ -43,7 +44,7 @@
                                 <i class="bi bi-chevron-right"></i>
                             </a>
                         </li>
-
+                        {{-- Ganti Username --}}
                         <li class="list-group-item">
                             <a href="{{ route('profil.username') }}" class="d-flex justify-content-between align-items-center text-decoration-none">
                                 <div class="d-flex align-items-center">
@@ -67,7 +68,7 @@
                                 </a>
                             </form>
                         </li>
-
+                        {{-- modal hapus akun --}}
                         <li class="list-group-item">
                             <a href="#" class="d-flex justify-content-between align-items-center text-decoration-none"
                                 data-bs-toggle="modal" data-bs-target="#hapusAkunModal">

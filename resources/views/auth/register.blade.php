@@ -9,9 +9,10 @@
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 </head>
 <body>
-
+    {{-- ragistrasi --}}
     <a href="{{ route('home') }}" class="btn-back-custom">
         <i class="bi bi-chevron-left"></i>
+        {{-- button back --}}
         <span class="back-text-wrapper"><span class="back-text">BACK</span></span>
     </a>
 
@@ -39,21 +40,24 @@
                 <form action="{{ route('register.post') }}" method="POST">
                     @csrf
                     <div class="row">
+                        {{-- nama depan --}}
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Nama Depan</label>
                             <input type="text" name="nama_depan" class="form-control" placeholder="Nama Depan" required value="{{ old('nama_depan') }}">
                         </div>
+                        {{-- nama belakang --}}
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Nama Belakang</label>
                             <input type="text" name="nama_belakang" class="form-control" placeholder="Nama Belakang" required value="{{ old('nama_belakang') }}">
                         </div>
                     </div>
-
+                    {{-- username --}}
                     <div class="mb-3">
                         <label class="form-label">Username</label>
                         <input type="text" name="username" class="form-control" placeholder="Username" required value="{{ old('username') }}">
                     </div>
                     <div class="mb-4">
+                    {{-- kata sandi --}}
                         <label class="form-label">Kata Sandi</label>
                         <div class="input-group">
                             <input type="password" name="password" class="form-control" id="password" placeholder="Min. 8 karakter" required>
@@ -63,7 +67,7 @@
                         </div>
                         <small class="form-text text-muted">Minimal 8 karakter.</small>
                     </div>
-
+                    {{-- tombol registrasi --}}
                     <div class="d-grid">
                         <button type="submit" class="btn btn-auth-primary">REGISTRASI</button>
                     </div>

@@ -3,6 +3,7 @@
 @section('title', 'Riwayat Pesanan')
 
 @section('content')
+{{-- riwayat pesanan --}}
 <div class="container py-5">
     <h2 class="mb-4">Riwayat Pesanan Saya</h2>
     
@@ -18,11 +19,12 @@
             </span>
         </div>
         <div class="card-body">
+            {{-- card body --}}
             <div class="row">
                 <div class="col-md-8">
                     <ul class="list-unstyled mb-0">
                         @foreach($order->detail as $item)
-                            {{-- Hanya tampilkan jika produknya masih ada --}}
+                            {{-- Hanya menampilkan jika produknya masih ada --}}
                             @if($item->produk)
                             <li class="mb-2">
                                 <i class="bi bi-box-seam me-2 text-primary"></i>
@@ -32,10 +34,11 @@
                         @endforeach
                     </ul>
                 </div>
+                {{-- total belanja --}}
                 <div class="col-md-4 text-end border-start">
                     <p class="text-muted mb-1">Total Belanja</p>
                     <h5 class="fw-bold text-primary">Rp {{ number_format($order->totalharga, 0, ',', '.') }}</h5>
-                    
+                    {{-- status order --}}
                     @if($order->status == 'pending')
                         <a href="{{ route('pembayaran.tunggu', $order->orderID) }}" class="btn btn-sm btn-warning mt-2">
                             Bayar Sekarang
