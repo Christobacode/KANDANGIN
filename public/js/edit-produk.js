@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const confirmUpdateBtn = document.getElementById('confirm-update-btn');
     if (confirmUpdateBtn) {
         confirmUpdateBtn.addEventListener('click', function() {
-            // Logika simpan ke database bisa ditaruh di sini
+            // logika simpan ke database bisa ditaruh di sini
             alert('Sukses! Produk berhasil diperbarui.');
             window.location.href = 'admin-produk.html';
         });

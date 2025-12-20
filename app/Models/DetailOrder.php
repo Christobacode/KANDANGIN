@@ -11,8 +11,7 @@ class DetailOrder extends Model
     public $timestamps = false;
     public $incrementing = false; // Karena Primary Key komposit, auto increment dimatikan
 
-    // Karena Laravel tidak support composite key secara native di $primaryKey,
-    // kita biarkan kosong atau atur logic khusus jika perlu update via model ini.
+    // karena Laravel tidak support composite key secara native di $primaryKey,
     
     protected $fillable = [
         'orderID',
@@ -26,7 +25,7 @@ class DetailOrder extends Model
         'qty' => 'integer', //ubah casting
     ];
 
-    // Fungsi ini biar kamu bisa memanggil: $detail->produk->namaproduk
+    // fungsi ini untuk memanggil: $detail->produk->namaproduk
     public function produk()
     {
         // Parameter: (Model Tujuan, Foreign Key di tabel ini, Primary Key di tabel tujuan)

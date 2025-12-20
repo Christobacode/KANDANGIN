@@ -12,7 +12,7 @@
                 </div>
                 <div class="card-body p-4">
                     
-                    {{-- PENTING: Tambahkan enctype="multipart/form-data" agar bisa upload file --}}
+                    
                     <form action="{{ route('produk.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         

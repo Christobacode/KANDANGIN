@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
 
-    // --- fungsi cek stok otomatis ---
+    //  fungsi cek stok otomatis 
     const checkStockStatus = () => {
         // Ambil semua kartu produk
         const productCards = document.querySelectorAll('.product-card');
@@ -95,7 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // logika halaman keranjang //
-    // --- LOGIKA HALAMAN KERANJANG (UPDATE) ---
+    //  logika halaman keranjang (update) 
     if (document.body.classList.contains('page-keranjang')) {
         const cartItemsContainer = document.getElementById('cart-items-container');
         const cartTotalPriceEl = document.getElementById('cart-total-price');
@@ -155,8 +155,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // --- FITUR CHECKOUT KE BACKEND (BARU) ---
-        // Cari tombol beli yang mengarah ke halaman pembayaran
+        //  fitur checkout ke backend 
         const checkoutBtn = document.querySelector('.btn-checkout[href="tunggupembayaran.html"]');
         
         if (checkoutBtn) {
@@ -168,7 +167,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     return;
                 }
 
-                // 1. Siapkan data sesuai permintaan OrderController Laravel
+                // menyiapkan data sesuai permintaan OrderController Laravel
                 const payload = {
                     items: cart.map(item => ({
                         // Mengambil angka saja dari ID (misal "p1" jadi 1)
@@ -177,18 +176,16 @@ document.addEventListener('DOMContentLoaded', () => {
                     }))
                 };
 
-                // 2. Ambil CSRF Token (Wajib untuk keamanan Laravel)
+                // mengambil CSRF Token 
                 const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
                 
                 if (!csrfToken) {
                     alert("CSRF Token tidak ditemukan. Pastikan Anda sudah login dan menggunakan file .blade.php");
-                    // Untuk testing HTML biasa tanpa server, biarkan lolos:
-                    // window.location.href = 'tunggupembayaran.html';
                     return;
                 }
 
                 try {
-                    // 3. Kirim data ke Controller
+                    // mengirim data ke Controller
                     const response = await fetch('/checkout', { 
                         method: 'POST',
                         headers: {
@@ -202,9 +199,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (response.ok) {
                         // Jika sukses masuk database, pindah ke halaman tunggu pembayaran
                         window.location.href = 'tunggupembayaran.html';
-                        
-                        // Opsional: Jangan hapus cart dulu agar bisa ditampilkan di halaman 'tunggupembayaran.html'
-                        // localStorage.removeItem('cart'); 
+                                            
                     } else {
                         const result = await response.json();
                         alert('Gagal Checkout: ' + (result.message || 'Terjadi kesalahan sistem.'));

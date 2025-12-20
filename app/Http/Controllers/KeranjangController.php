@@ -12,17 +12,16 @@ use Illuminate\Support\Facades\DB;
 
 class KeranjangController extends Controller
 {
-    // ==========================================================
-    // 1. TAMPILKAN HALAMAN KERANJANG
-    // ==========================================================
+    
+    // 1. Menampilkan alamat keranjang
     public function index()
     {
         $userID = Auth::id();
         
-        // Ambil data keranjang user beserta info produknya
+        // maengmbil data keranjang user beserta info produknya
         $carts = Keranjang::with('produk')->where('userID', $userID)->get();
 
-        // PERBAIKAN: Gunakan ?-> untuk mencegah crash jika produk null saat menghitung total
+       
         $totalBayar = $carts->sum(function($item) {
             return ($item->produk?->hargaproduk ?? 0) * $item->qty;
         });
@@ -30,9 +29,8 @@ class KeranjangController extends Controller
         return view('keranjang', compact('carts', 'totalBayar'));
     }
 
-    // ==========================================================
-    // 2. TAMBAH BARANG KE KERANJANG (Tombol Beli)
-    // ==========================================================
+
+    // 2. tambah barang ke karanjang 
     public function addToCart($produkID)
     {
         $userID = Auth::id();
