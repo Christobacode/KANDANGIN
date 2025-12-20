@@ -13,10 +13,10 @@ return new class extends Migration
             $table->string('namaproduk', 100);
             $table->integer('hargaproduk');
             $table->integer('stokproduk');
-            // Tambahkan kolom gambar (nullable artinya boleh kosong)
+            
             $table->string('gambar')->nullable(); 
             
-            // Foreign Key Kategori
+           
             $table->unsignedBigInteger('kategoriID');
             $table->foreign('kategoriID')->references('kategoriID')->on('kategori')->onDelete('cascade');
             

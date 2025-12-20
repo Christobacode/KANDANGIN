@@ -14,7 +14,7 @@ class Produk extends Model
     public $timestamps = false;
     protected $guarded = [];
 
-    // Tambahkan 'gambar' di sini
+    
     protected $fillable = [
         'namaproduk', 
         'hargaproduk', 

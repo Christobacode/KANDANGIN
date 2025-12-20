@@ -15,8 +15,7 @@ class UserController extends Controller
     }
 
     // ubah username 
-    
-    // Tampilkan Form (Sesuai nama file Anda: ubahusername.blade.php)
+    // menampilkan Form 
     public function editUsername()
     {
        
@@ -39,7 +38,6 @@ class UserController extends Controller
     }
 
     // ubah password
-
     // Tampilkan Form 
     public function editPassword()
     {

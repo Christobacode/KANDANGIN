@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        // Membuat tabel 'kategori' yang BENAR
+        // Membuat tabel 'kategori' 
         Schema::create('kategori', function (Blueprint $table) {
             $table->id('kategoriID'); // Primary Key (sesuai request tabel produk)
             $table->string('namakategori', 100);
