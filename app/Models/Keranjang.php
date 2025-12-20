@@ -10,10 +10,10 @@ class Keranjang extends Model
     protected $primaryKey = 'keranjangID';
     protected $fillable = ['userID', 'produkID', 'qty'];
     
-    // Matikan timestamp jika tidak ingin ribet, atau nyalakan jika tabel punya created_at
+    // matikan timestamp jika tidak ingin ribet, atau nyalakan jika tabel punya created_at
     public $timestamps = false; 
 
-    // Relasi ke Produk (Wajib ada biar bisa ambil nama & harga)
+    // Relasi ke Produk 
     public function produk()
     {
         return $this->belongsTo(Produk::class, 'produkID', 'produkID');

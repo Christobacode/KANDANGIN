@@ -10,7 +10,7 @@ class Pembayaran extends Model
     protected $primaryKey = 'pembayaranID';
     public $timestamps = false;
 
-    // Casting tanggal agar otomatis jadi object Carbon/Date
+    // casting tanggal agar otomatis jadi object Carbon/Date
     protected $casts = [
         'tglpembayaran' => 'date',
         'totalbayar' => 'integer', //ubah casting

@@ -5,30 +5,28 @@ namespace App\Http\Controllers;
 use App\Models\Produk;
 use App\Models\Kategori;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth; // Tambahkan ini
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
 
 class ProdukController extends Controller
 {
-    // 1. TAMPILKAN PRODUK (LOGIKA PEMISAH)
+    // tampilkan produk
     public function index()
     {
-        // Ambil data produk & kategori
+        // mengambil data produk & kategori
         $produk = Produk::with('kategori')->get();
         $kategori = Kategori::all();
 
-        // Cek Role User
+        // cek role User
         if (Auth::check() && Auth::user()->role === 'admin') {
-            // Jika Admin -> Tampilkan View Khusus Admin
+            // Jika Admin maka Tampilkan View Khusus Admin
             return view('produk.index_admin', compact('produk', 'kategori'));
         }
 
-        // Jika User Biasa / Tamu -> Tampilkan View Biasa
+        // Jika User Biasa / Tamu maka Tampilkan View Biasa
         return view('produk.index', compact('produk', 'kategori'));
     }
-
-    // ... (Function create, store, edit, update, destroy biarkan TETAP SAMA seperti sebelumnya) ...
     
     public function create()
     {
@@ -45,7 +43,7 @@ class ProdukController extends Controller
             return redirect('/login')->with('error', 'Anda harus login dulu!');
         }
 
-        // 1. Validasi Input
+        // Validasi Input
         $validated = $request->validate([
             'namaproduk'  => 'required|max:100',
             'hargaproduk' => 'required|numeric', 
@@ -54,15 +52,15 @@ class ProdukController extends Controller
             'gambar'      => 'nullable|image|mimes:jpeg,png,jpg|max:2048', // Validasi Gambar
         ]);
 
-        // 2. Cek apakah ada file gambar yang diupload
+        // Cek apakah ada file gambar yang diupload
         if ($request->hasFile('gambar')) {
             // Simpan gambar ke folder 'public/storage/produk-images'
-            // Hasilnya path seperti: "produk-images/namafileacak.jpg"
+           
             $path = $request->file('gambar')->store('produk-images', 'public');
             $validated['gambar'] = $path;
         }
 
-        // 3. Simpan ke Database
+        // Simpan ke Database
         Produk::create($validated);
 
         return redirect()->route('produk.index')->with('success', 'Produk berhasil ditambahkan!');

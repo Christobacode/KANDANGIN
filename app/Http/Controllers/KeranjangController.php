@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\DB;
 class KeranjangController extends Controller
 {
     
-    // 1. Menampilkan alamat keranjang
+    //Menampilkan alamat keranjang
     public function index()
     {
         $userID = Auth::id();
@@ -30,30 +30,30 @@ class KeranjangController extends Controller
     }
 
 
-    // 2. tambah barang ke karanjang 
+    // tambah barang ke karanjang 
     public function addToCart($produkID)
     {
         $userID = Auth::id();
 
-        // 1. Ambil data produk berdasarkan $produkID agar variabel $produk terdefinisi
-        // Gunakan findOrFail agar otomatis error 404 jika ID produk tidak ditemukan
+        // mengambil data produk berdasarkan $produkID agar variabel $produk terdefinisi
+        // menggunakan findOrFail agar otomatis error 404 jika ID produk tidak ditemukan
         $produk = Produk::findOrFail($produkID); 
 
-        // 2. Sekarang variabel $produk sudah bisa digunakan untuk cek stok
+        
         if ($produk->stokproduk < 1) {
             return redirect()->back()->with('error', 'Maaf, stok produk ini sudah habis!');
         }
 
-        // Cek apakah barang sudah ada di keranjang
+        // cek apakah barang sudah ada di keranjang
         $cekItem = \App\Models\Keranjang::where('userID', $userID)
                             ->where('produkID', $produkID)
                             ->first();
 
         if ($cekItem) {
-            // Jika sudah ada, tambah jumlahnya (+1)
+            // jika sudah ada, tambah jumlahnya (+1)
             $cekItem->increment('qty');
         } else {
-            // Jika belum ada, buat data baru
+            // jika belum ada, buat data baru
             \App\Models\Keranjang::create([
                 'userID'   => $userID,
                 'produkID' => $produkID,
@@ -61,30 +61,28 @@ class KeranjangController extends Controller
             ]);
         }
 
-        // 3. Kurangi stok produk
+        // kurangi stok produk
         $produk->decrement('stokproduk');
 
         return redirect()->route('keranjang.index')->with('success', 'Berhasil masuk keranjang!');
     }
 
-    // ==========================================================
-    // 3. UPDATE JUMLAH (Tombol + dan - di Keranjang)
-    // ==========================================================
+    // Update jumlah
     public function updateQty(Request $request, $keranjangID)
     {
         // Cari data keranjang beserta info produknya
         $cart = \App\Models\Keranjang::with('produk')->where('keranjangID', $keranjangID)->firstOrFail();
-        $produk = $cart->produk; // Ambil data produk terkait
+        $produk = $cart->produk; 
 
         if($request->type == 'plus') {
-            // Cek apakah stok masih ada sebelum menambah
-            // Validasi Stok: Cek apakah masih bisa ditambah
+            // cek apakah stok masih ada sebelum menambah
+            // validasi Stok: Cek apakah masih bisa ditambah
             if (!$produk || $produk->stokproduk < 1) {
                 return redirect()->back()->with('error', 'Gagal menambah jumlah! Stok sudah habis.');
             }
             
             $cart->increment('qty');
-            $produk->decrement('stokproduk'); // Kurangi stok karena barang di keranjang bertambah
+            $produk->decrement('stokproduk'); // kurangi stok karena barang di keranjang bertambah
         } 
         elseif($request->type == 'minus') {
             if($cart->qty > 1) {
@@ -93,43 +91,41 @@ class KeranjangController extends Controller
                 $cart->delete();
             }
             
-            // TAMBAHKAN INI: Kembalikan stok produk karena jumlah di keranjang berkurang/dihapus
+           
             $produk->increment('stokproduk');
         }
         
         return redirect()->back();
     }
 
-    // ==========================================================
-    // 4. CHECKOUT (Proses Beli -> Pindah ke Order)
-    // ==========================================================
+    // checkout
     public function checkout()
     {
-        // Pakai DB Transaction biar aman (Kalau error di tengah, batal semua)
+        
         DB::beginTransaction();
         
         try {
             $userID = Auth::id();
             
-            // Ambil semua isi keranjang user
+            // mengambil semua isi keranjang user
             $carts = Keranjang::with('produk')->where('userID', $userID)->get();
 
-            // Jaga-jaga kalau keranjang kosong tapi maksa checkout
+           
             if($carts->isEmpty()) {
                 return redirect()->back()->with('error', 'Keranjangmu kosong!');
             }
 
-            // Hitung total harga final
+            // hitung total harga final
             $totalHarga = $carts->sum(fn($c) => $c->produk->hargaproduk * $c->qty);
 
-            // A. SIMPAN KE TABEL ORDER (Status awal: Pending)
+           
             $order = Order::create([
                 'userID'     => $userID,
                 'totalharga' => $totalHarga,
                 'status'     => 'pending' 
             ]);
 
-            // B. PINDAHKAN DETAIL BARANG (Dari Keranjang ke DetailOrder)
+            
             foreach($carts as $c) {
                 DetailOrder::create([
                     'orderID'  => $order->orderID,
@@ -138,17 +134,17 @@ class KeranjangController extends Controller
                 ]);
             }
 
-            // C. HAPUS ISI KERANJANG (Kan sudah dipindah ke Order)
+            
             Keranjang::where('userID', $userID)->delete();
 
-            // Simpan perubahan ke Database
+            // simpan perubahan ke Database
             DB::commit();
 
-            // Arahkan ke halaman Pembayaran (QRIS)
+            // arahkan ke halaman Pembayaran (QRIS)
             return redirect()->route('pembayaran.tunggu', $order->orderID);
 
         } catch (\Exception $e) {
-            // Kalau ada error, batalkan semua
+            // kalau ada error, batalkan semua
             DB::rollBack();
             return redirect()->back()->with('error', 'Gagal checkout: ' . $e->getMessage());
         }

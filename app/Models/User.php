@@ -9,7 +9,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
-    // use Notifiable;
+    
 
     // Menentukan nama tabel karena di SQL namanya 'user' (singular)
     protected $table = 'user';

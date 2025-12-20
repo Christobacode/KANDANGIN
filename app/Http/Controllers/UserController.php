@@ -14,16 +14,16 @@ class UserController extends Controller
         return view('profil.index');
     }
 
-    // --- FITUR UBAH USERNAME ---
+    // ubah username 
     
-    // 1. Tampilkan Form (Sesuai nama file Anda: ubahusername.blade.php)
+    // Tampilkan Form (Sesuai nama file Anda: ubahusername.blade.php)
     public function editUsername()
     {
-        // Pastikan file ada di: resources/views/profil/ubahusername.blade.php
+       
         return view('profil.ubahusername'); 
     }
 
-    // 2. Proses Update Username
+    // Proses Update Username
     public function updateUsername(Request $request)
     {
         $request->validate([
@@ -38,16 +38,16 @@ class UserController extends Controller
         return redirect()->route('profil')->with('success', 'Username berhasil diperbarui!');
     }
 
-    // --- FITUR UBAH PASSWORD ---
+    // ubah password
 
-    // 1. Tampilkan Form (Sesuai nama file Anda: ubahpassword.blade.php)
+    // Tampilkan Form 
     public function editPassword()
     {
-        // Pastikan file ada di: resources/views/profil/ubahpassword.blade.php
+       
         return view('profil.ubahpassword');
     }
 
-    // 2. Proses Update Password
+    // Proses Update Password
     public function updatePassword(Request $request)
     {
         $request->validate([

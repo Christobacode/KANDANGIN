@@ -48,7 +48,7 @@ class AuthController extends Controller
     // Proses Register
     public function register(Request $request)
     {
-        // 1. Validasi Input
+        // Validasi Input
         $request->validate([
             'nama_depan'    => 'required|string|max:50',
             'nama_belakang' => 'required|string|max:50',
@@ -56,7 +56,7 @@ class AuthController extends Controller
             'password'      => 'required|min:8',
         ]);
 
-        // 2. LOGIKA PENYIMPANAN YANG HILANG (Tambahkan Ini!)
+        // logika halaman yang hilang 
         // Gabungkan nama depan & belakang
         $fullName = $request->nama_depan . ' ' . $request->nama_belakang;
 

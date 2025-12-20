@@ -11,7 +11,6 @@ class DetailOrder extends Model
     public $timestamps = false;
     public $incrementing = false; // Karena Primary Key komposit, auto increment dimatikan
 
-    // karena Laravel tidak support composite key secara native di $primaryKey,
     
     protected $fillable = [
         'orderID',
