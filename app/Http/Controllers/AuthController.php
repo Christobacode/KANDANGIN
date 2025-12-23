@@ -8,14 +8,15 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 
+// Controller ini buat ngatur proses login dan register sampe logout
 class AuthController extends Controller
 {
-    // Tampilkan Login
+    // Menampilkan halaman form login
     public function showLoginForm() {
         return view('auth.login');
     }
 
-    // Proses Login
+    // Validasi input login
     public function login(Request $request) {
         // Defensive: Validasi Input
         $credentials = $request->validate([
@@ -26,7 +27,7 @@ class AuthController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-            // LOGIKA PEMISAH ADMIN & USER
+            // Authentication login admin & user biasa
             if (Auth::user()->role === 'admin') {
                 $request->session()->put('admin_id', Auth::user()->userID);
                 return redirect()->route('produk.index')->with('success', 'Selamat Datang Admin!');
@@ -40,12 +41,12 @@ class AuthController extends Controller
         ])->onlyInput('username');
     }
 
-    // Tampilkan Register
+    // Tampilkan Register form
     public function showRegisterForm() {
         return view('auth.register');
     }
 
-    // Proses Register
+    // function validasi input register 
     public function register(Request $request)
     {
         // Validasi Input
@@ -56,25 +57,26 @@ class AuthController extends Controller
             'password'      => 'required|min:8',
         ]);
 
-        // logika halaman yang hilang 
-        // Gabungkan nama depan & belakang
+        // Buat menggabungkan nama depan & belakang jadi satu string
         $fullName = $request->nama_depan . ' ' . $request->nama_belakang;
 
+        // Menyimpan user baru ke dalam database
         User::create([
             'nama'     => $fullName,
             'username' => $request->username,
-            // Buat email dummy karena di tabel butuh email tapi form gak ada
-            'email'    => $request->username . '@example.com', 
             'password' => Hash::make($request->password), // Enkripsi password
-            'role'     => 'user', // Set otomatis jadi user biasa
+            'role'     => 'user', // bakal jadi langsung user biasa kalau jadi admin ubah manual ke phpmyadminnya
         ]);
 
         return redirect()->route('login')->with('success', 'Registrasi berhasil! Silakan login.');
     }
 
+    // Function buat logout
     public function logout(Request $request) {
         Auth::logout();
+        // Menghapus data session pengguna
         $request->session()->invalidate();
+        // Mengatur ulang token CSRF untuk keamanan
         $request->session()->regenerateToken();
         return redirect()->route('home');
     }

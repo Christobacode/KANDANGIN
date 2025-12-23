@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
-
+// Controller ini fungsinya buat ngatur CRUD produk Mulai dari nampilin barang, nambah, edit, sampe hapus.
 class ProdukController extends Controller
 {
     // tampilkan produk
@@ -18,7 +18,7 @@ class ProdukController extends Controller
         $produk = Produk::with('kategori')->get();
         $kategori = Kategori::all();
 
-        // cek role User
+        // cek role User yang lagi login
         if (Auth::check() && Auth::user()->role === 'admin') {
             // Jika Admin maka Tampilkan View Khusus Admin
             return view('produk.index_admin', compact('produk', 'kategori'));
@@ -28,6 +28,7 @@ class ProdukController extends Controller
         return view('produk.index', compact('produk', 'kategori'));
     }
     
+    // Nampilin form buat nambah produk baru
     public function create()
     {
         if (!Session::has('admin_id')) {
@@ -37,6 +38,7 @@ class ProdukController extends Controller
         return view('produk.create', compact('kategori'));
     }
 
+    // Simpan produk baru ke database
     public function store(Request $request)
     {
         if (!Session::has('admin_id')) {
@@ -49,7 +51,7 @@ class ProdukController extends Controller
             'hargaproduk' => 'required|numeric', 
             'stokproduk'  => 'required|integer',
             'kategoriID'  => 'required|exists:kategori,kategoriID',
-            'gambar'      => 'nullable|image|mimes:jpeg,png,jpg|max:2048', // Validasi Gambar
+            'gambar'      => 'nullable|image|mimes:jpeg,png,jpg|max:4096', // Maksimal ukuran gambar adalah 4 mb
         ]);
 
         // Cek apakah ada file gambar yang diupload
@@ -66,6 +68,7 @@ class ProdukController extends Controller
         return redirect()->route('produk.index')->with('success', 'Produk berhasil ditambahkan!');
     }
 
+    // Menampilkan form buat edit produk
     public function edit($id)
     {
         if (!Session::has('admin_id')) {
@@ -77,6 +80,7 @@ class ProdukController extends Controller
         return view('produk.edit', compact('produk', 'kategori'));
     }
 
+    // Function update data produk yang udah diedit.
     public function update(Request $request, $id)
     {
         if (!Session::has('admin_id')) {
@@ -94,6 +98,7 @@ class ProdukController extends Controller
         return redirect()->route('produk.index')->with('success', 'Produk berhasil diperbarui!');
     }
 
+    // Function buat hapus produk dari database 
     public function destroy($id)
     {
         if (!Session::has('admin_id')) {

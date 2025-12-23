@@ -4,19 +4,20 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+// Model Pembayaran fungsinya untuk mencatat bukti transaksi atau data pembayaran yang dilakukan user.
 class Pembayaran extends Model
 {
     protected $table = 'pembayaran';
     protected $primaryKey = 'pembayaranID';
-    public $timestamps = false;
+    public $timestamps = false; // matikan timestamp karna tidak pake created_at dan updated_at
 
-    // casting tanggal agar otomatis jadi object Carbon/Date
+    // Casting: Memastikan data yang keluar dari database otomatis diubah ke tipe data yang bener.
     protected $casts = [
         'tglpembayaran' => 'date',
-        'totalbayar' => 'integer', //ubah casting
-        'pembayaranID' => 'integer', //ubah casting
-        'userID' => 'integer', //ubah casting
-        'produkID' => 'integer', //ubah casting
+        'totalbayar' => 'integer', 
+        'pembayaranID' => 'integer', 
+        'userID' => 'integer', 
+        'produkID' => 'integer', 
     ];
 
     protected $fillable = [
@@ -26,16 +27,4 @@ class Pembayaran extends Model
         'userID',
         'produkID',
     ];
-
-    // // Relasi: Pembayaran dilakukan oleh User
-    // public function user()
-    // {
-    //     return $this->belongsTo(User::class, 'userID', 'userID');
-    // }
-
-    // // Relasi: Pembayaran terkait Produk tertentu
-    // public function produk()
-    // {
-    //     return $this->belongsTo(Produk::class, 'produkID', 'produkID');
-    // }
 }

@@ -5,7 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\OrderController;
-use App\Http\Controllers\KeranjangController; // PASTIKAN FILE INI ADA!
+use App\Http\Controllers\KeranjangController; 
 
 // AUTH
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
@@ -21,11 +21,13 @@ Route::get('/tentang', function () { return view('tentang'); })->name('tentang')
 Route::get('/produk', [ProdukController::class, 'index'])->name('produk.index');
 
 // ADMIN (PRODUK)
+Route::middleware(['auth', 'is_admin'])->group(function () {
 Route::get('/produk/create', [ProdukController::class, 'create'])->name('produk.create');
 Route::post('/produk', [ProdukController::class, 'store'])->name('produk.store');
 Route::get('/produk/{id}/edit', [ProdukController::class, 'edit'])->name('produk.edit');
 Route::put('/produk/{id}', [ProdukController::class, 'update'])->name('produk.update');
 Route::delete('/produk/{id}', [ProdukController::class, 'destroy'])->name('produk.destroy');
+});
 
 // MEMBER AREA (Harus Login)
 Route::middleware(['auth'])->group(function () {

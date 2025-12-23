@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+// Model Kategori fungsinya untuk mengelola data kategori produk.
 class Kategori extends Model
 {
     protected $table = 'kategori';
@@ -15,13 +16,8 @@ class Kategori extends Model
         'kategoriID',
     ];
 
+    // Casting: Memastikan data yang keluar dari database otomatis diubah ke tipe data yang bener.
     protected $casts = [
         'kategoriID' => 'integer', //ubah casting
     ];
-
-    // // Relasi: Kategori memiliki banyak Produk
-    // public function produk()
-    // {
-    //     return $this->hasMany(Produk::class, 'kategoriID', 'kategoriID');
-    // }
 }

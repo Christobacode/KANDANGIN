@@ -4,13 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+// Model Keranjang fungsinya buat nampung sementara barang-barang yang mau dibeli sama user.
 class Keranjang extends Model
 {
     protected $table = 'keranjang';
     protected $primaryKey = 'keranjangID';
     protected $fillable = ['userID', 'produkID', 'qty'];
     
-    // matikan timestamp jika tidak ingin ribet, atau nyalakan jika tabel punya created_at
+    // matikan timestamp karna tidak pake created_at dan updated_at
     public $timestamps = false; 
 
     // Relasi ke Produk 

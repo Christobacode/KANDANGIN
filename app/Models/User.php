@@ -4,8 +4,7 @@ namespace App\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-
-
+//Model User model ini penting dan spesial karena mewarisi Authenticatable, fungsinya buat ngurusin login, pendaftaran, dan identitas user di aplikasi Kandangin.
 class User extends Authenticatable
 {
     
@@ -16,9 +15,11 @@ class User extends Authenticatable
     // menentukan primary key karena bukan 'id'
     protected $primaryKey = 'userID';
 
-    // nonaktifkan timestamps karena tidak ada kolom created_at/updated_at
-    public $timestamps = false;
+    // matikan timestamp karna tidak pake created_at dan updated_at
+    public $timestamps = false; 
 
+    // Mass Assignment Protection: Kolom mana saja yang boleh diisi lewat User::create().
+    // Penting buat keamanan biar gak ada orang iseng masukin data ke kolom yang gak seharusnya.
     protected $fillable = [
         'userID',
         'nama',
@@ -27,19 +28,8 @@ class User extends Authenticatable
         'username',
     ];
 
+    // Hidden Attributes: Kolom yang bakal disembunyikan kalau datanya diubah jadi array atau JSON.
     protected $hidden = [
         'password',
     ];
-
-    // // Relasi: User memiliki banyak Order
-    // public function orders()
-    // {
-    //     return $this->hasMany(Order::class, 'userID', 'userID');
-    // }
-
-    // // Relasi: User memiliki banyak Pembayaran
-    // public function pembayaran()
-    // {
-    //     return $this->hasMany(Pembayaran::class, 'userID', 'userID');
-    // }
 }

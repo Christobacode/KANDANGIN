@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 
+// Controller ini buat ngurusin profil user 
 class UserController extends Controller
 {
     public function index()
@@ -14,15 +15,14 @@ class UserController extends Controller
         return view('profil.index');
     }
 
-    // ubah username 
-    // menampilkan Form 
+    // Menampilkan form ganti username
     public function editUsername()
     {
        
         return view('profil.ubahusername'); 
     }
 
-    // Proses Update Username
+    // Function Update Username
     public function updateUsername(Request $request)
     {
         $request->validate([
@@ -37,15 +37,14 @@ class UserController extends Controller
         return redirect()->route('profil')->with('success', 'Username berhasil diperbarui!');
     }
 
-    // ubah password
-    // Tampilkan Form 
+    // Menampilkan form mengubah password
     public function editPassword()
     {
        
         return view('profil.ubahpassword');
     }
 
-    // Proses Update Password
+    // Function Update Password
     public function updatePassword(Request $request)
     {
         $request->validate([
@@ -58,7 +57,7 @@ class UserController extends Controller
             return back()->with('error', 'Kata sandi lama salah!');
         }
 
-        // Simpan password baru
+        // Buat menyimpan password baru
         $user = User::find(Auth::id());
         $user->password = Hash::make($request->new_password);
         $user->save();
@@ -66,6 +65,7 @@ class UserController extends Controller
         return redirect()->route('profil')->with('success', 'Kata sandi berhasil diubah!');
     }
 
+    // Function buat menghapus akun
     public function destroy()
     {
         $user = User::find(Auth::id());

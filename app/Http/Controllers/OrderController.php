@@ -6,21 +6,22 @@ use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+// Controller ini buat ngurusin semua yang berhubungan sama pesanan
 class OrderController extends Controller
 {
-    // tampilkan riwayat pesanan
+    // Function  buat menampilkan riwayat pesanan
     public function history()
     {
         $user = Auth::user();
 
-        
+        // Ambil data order + user yang beli + detail itemnya.
         // menambahkan filter 'has produk' agar detail yang produknya sudah dihapus tidak muncul
         $query = Order::with(['user', 'detail' => function($q) {
             $q->has('produk'); 
         }, 'detail.produk']);
 
         if ($user->role === 'admin') {
-            // admin: Melihat pesanan semua user kecuali miliknya sendiri
+            // admin: Melihat pesanan dari semua user yang telah dilakukan
             $orders = $query->where('userID', '!=', $user->userID)
                             ->orderBy('orderID', 'desc')
                             ->get();
@@ -28,7 +29,7 @@ class OrderController extends Controller
             return view('order.admin_history', compact('orders'));
         }
 
-        // user Biasa: Hanya melihat pesanan milik sendiri
+        // user Biasa: Hanya melihat pesanan miliknya sendiri
         $orders = $query->where('userID', $user->userID)
                         ->orderBy('orderID', 'desc')
                         ->get();
@@ -53,7 +54,7 @@ class OrderController extends Controller
         return view('tunggupembayaran', compact('order'));
     }
 
-    //konfirmasi pembayaran
+    // Function buat proses konfirmasi pembayaran
     public function confirmPayment($orderID)
     {
         // Cari order berdasarkan ID dan kepemilikan user
@@ -61,11 +62,11 @@ class OrderController extends Controller
                     ->where('userID', Auth::id())
                     ->firstOrFail();
         
-        // Update status menggunakan properti objek dan save() 
+        // Ganti status dari 'pending' ke 'paid'
         $order->status = 'paid';
         $order->save(); 
 
-        // kembali ke halaman sukses pembayaran
+        // kembali ke halaman selesai pembayaran
         return view('selesaipembayaran');
     }
 }

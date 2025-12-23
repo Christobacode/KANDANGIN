@@ -10,18 +10,19 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
+// Berisi function buat mengelola logika keranjang seperti perubahan kuantitas dan proses checkout
 class KeranjangController extends Controller
 {
     
-    //Menampilkan alamat keranjang
+    //Menampilkan daftar item di keranjang belanja user yang sedang login.
     public function index()
-    {
+    {   
         $userID = Auth::id();
         
-        // mengmbil data keranjang user beserta info produknya
+        // mengambil data keranjang user beserta info produknya
         $carts = Keranjang::with('produk')->where('userID', $userID)->get();
 
-       
+        // Menghitung total biaya pake sum
         $totalBayar = $carts->sum(function($item) {
             return ($item->produk?->hargaproduk ?? 0) * $item->qty;
         });
@@ -30,7 +31,7 @@ class KeranjangController extends Controller
     }
 
 
-    // tambah barang ke karanjang 
+    // Menambahkan barang ke karanjang 
     public function addToCart($produkID)
     {
         $userID = Auth::id();
@@ -39,18 +40,18 @@ class KeranjangController extends Controller
         // menggunakan findOrFail agar otomatis error 404 jika ID produk tidak ditemukan
         $produk = Produk::findOrFail($produkID); 
 
-        
+        // Buat menampilkan semisal produk sudah habis maka akan ada output maaf stok produk sudah habis
         if ($produk->stokproduk < 1) {
             return redirect()->back()->with('error', 'Maaf, stok produk ini sudah habis!');
         }
 
-        // cek apakah barang sudah ada di keranjang
+        // Mengecek apakah barang sudah ada di keranjang
         $cekItem = \App\Models\Keranjang::where('userID', $userID)
                             ->where('produkID', $produkID)
                             ->first();
 
         if ($cekItem) {
-            // jika sudah ada, tambah jumlahnya (+1)
+            // jika sudah ada  di keranjang yang ditambah jumlahnya (+1)
             $cekItem->increment('qty');
         } else {
             // jika belum ada, buat data baru
@@ -63,11 +64,11 @@ class KeranjangController extends Controller
 
         // kurangi stok produk
         $produk->decrement('stokproduk');
-
+    
         return redirect()->route('keranjang.index')->with('success', 'Berhasil masuk keranjang!');
     }
 
-    // Update jumlah
+    // Memperbarui jumlah produk yang mau dibeli di keranjang(nambah/kurangi)
     public function updateQty(Request $request, $keranjangID)
     {
         // Cari data keranjang beserta info produknya
@@ -75,7 +76,7 @@ class KeranjangController extends Controller
         $produk = $cart->produk; 
 
         if($request->type == 'plus') {
-            // cek apakah stok masih ada sebelum menambah
+            // cek apakah stok masih ada atau habis
             // validasi Stok: Cek apakah masih bisa ditambah
             if (!$produk || $produk->stokproduk < 1) {
                 return redirect()->back()->with('error', 'Gagal menambah jumlah! Stok sudah habis.');
@@ -88,20 +89,21 @@ class KeranjangController extends Controller
             if($cart->qty > 1) {
                 $cart->decrement('qty');
             } else {
+                // Kalau qty menjadi 0 maka akan di hapus dari keranjang
                 $cart->delete();
             }
             
-           
+            // Kalau barang yang di keranjang dikurangi maka stok produknya nambah
             $produk->increment('stokproduk');
         }
         
         return redirect()->back();
     }
 
-    // checkout
+    // Function buat lanjut ke checkout
     public function checkout()
     {
-        
+        // Memulai transaksi database
         DB::beginTransaction();
         
         try {
@@ -115,7 +117,7 @@ class KeranjangController extends Controller
                 return redirect()->back()->with('error', 'Keranjangmu kosong!');
             }
 
-            // hitung total harga final
+            // hitung total harga final 
             $totalHarga = $carts->sum(fn($c) => $c->produk->hargaproduk * $c->qty);
 
            
@@ -125,7 +127,7 @@ class KeranjangController extends Controller
                 'status'     => 'pending' 
             ]);
 
-            
+            // Pindahkan produk yang dibeli ke detailorder
             foreach($carts as $c) {
                 DetailOrder::create([
                     'orderID'  => $order->orderID,
@@ -134,7 +136,7 @@ class KeranjangController extends Controller
                 ]);
             }
 
-            
+            // Kosongkan keranjang user setelah checkout berhasil
             Keranjang::where('userID', $userID)->delete();
 
             // simpan perubahan ke Database
