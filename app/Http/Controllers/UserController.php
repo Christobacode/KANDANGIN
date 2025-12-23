@@ -49,7 +49,8 @@ class UserController extends Controller
     {
         $request->validate([
             'current_password' => 'required',
-            'new_password' => 'required|min:5|confirmed', // confirmed cek input 'new_password_confirmation'
+            // Peningkatan keamanan: minimal 8 karakter untuk mencegah brute force
+            'new_password' => 'required|min:8|confirmed', // confirmed cek input 'new_password_confirmation'
         ]);
 
         // Cek password lama

@@ -13,7 +13,6 @@ class Produk extends Model
     protected $table = 'produk';
     protected $primaryKey = 'produkID';
     public $timestamps = false; // matikan timestamp karna tidak pake created_at dan updated_at
-    protected $guarded = [];
 
     
     protected $fillable = [
